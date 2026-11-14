@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distance, Velocity &amp; Acceleration – Christmas Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#c8102e; --red-d:#8f0b21; --green:#146b3a; --green-d:#0a3d2a; --green-l:#1f8f52;
+  --gold:#f4c542; --gold-d:#c99a14; --snow:#fffaf0; --ink:#1b2a22;
+  --font:'Poppins','Segoe UI','Helvetica Neue',Arial,system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:var(--font); color:var(--snow);
+  background:radial-gradient(1200px 700px at 15% -10%,#1f8f52 0%,transparent 60%),
+             radial-gradient(900px 600px at 100% 0%,#8f0b21 0%,transparent 55%),
+             linear-gradient(160deg,#0a3d2a,#06261a 70%);
+  background-attachment:fixed;
+  -webkit-tap-highlight-color:transparent;
+}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:18px 16px 60px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px;font-size:1.05rem}
+.brand .tree{font-size:1.6rem}
+.iconbtn{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.35);color:var(--snow);
+  border-radius:999px;padding:8px 14px;font:600 .85rem var(--font);cursor:pointer;min-height:40px}
+.iconbtn:hover{background:rgba(255,255,255,.2)}
+.card{background:rgba(255,250,240,.97);color:var(--ink);border-radius:20px;padding:22px;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);border:3px solid var(--gold);margin-bottom:16px}
+.card h1,.card h2,.card h3{margin:0 0 8px;color:var(--red-d);letter-spacing:.2px}
+.hero{text-align:center;background:linear-gradient(135deg,var(--red),var(--red-d));color:var(--snow);border-color:var(--gold)}
+.hero h1{color:#fff;font-size:clamp(1.5rem,4.5vw,2.3rem);font-weight:800;margin-bottom:6px}
+.hero p{margin:4px 0;opacity:.95}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+label.lbl{font-weight:700;color:var(--green-d);display:block;margin-bottom:6px}
+input[type=text]{
+  font:500 1.05rem var(--font);padding:12px 14px;border-radius:12px;border:2px solid #c9d8cf;background:#fff;color:var(--ink);
+  min-height:48px;outline:none;transition:border-color .15s, box-shadow .15s;
+}
+input[type=text]:focus{border-color:var(--green-l);box-shadow:0 0 0 4px rgba(31,143,82,.2)}
+.btn{font:700 1rem var(--font);border:none;border-radius:14px;padding:12px 22px;min-height:48px;cursor:pointer;
+  color:#fff;background:linear-gradient(180deg,var(--green-l),var(--green));box-shadow:0 4px 0 var(--green-d);
+  transition:transform .08s, box-shadow .08s, filter .15s;touch-action:manipulation}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--green-d)}
+.btn.red{background:linear-gradient(180deg,#e2243f,var(--red));box-shadow:0 4px 0 var(--red-d)}
+.btn.red:active{box-shadow:0 1px 0 var(--red-d)}
+.btn.gold{background:linear-gradient(180deg,#ffd966,var(--gold));color:#4a3500;box-shadow:0 4px 0 var(--gold-d)}
+.btn.gold:active{box-shadow:0 1px 0 var(--gold-d)}
+.btn.ghost{background:#eef4ef;color:var(--green-d);box-shadow:0 4px 0 #c5d3c9}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.big{font-size:1.1rem;padding:14px 26px}
+.formulas{background:#f3f8f4;border:2px dashed var(--green-l);border-radius:14px;padding:12px 16px;margin:10px 0 4px;color:var(--ink)}
+.formulas b{color:var(--red-d)}
+.formulas div{margin:4px 0;font-size:1.02rem}
+sub,sup{font-size:.7em}
+.stepper{display:flex;gap:8px;margin-bottom:14px}
+.step{flex:1;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;gap:8px;font-weight:600;font-size:.85rem}
+.step.active{background:rgba(244,197,66,.25);border-color:var(--gold)}
+.step.done{background:rgba(31,143,82,.35);border-color:#7be0a5}
+.step svg{width:30px;height:30px;flex:none}
+.prob{border:2px solid #dbe6de;border-radius:16px;padding:16px;margin:14px 0;background:#fff;position:relative;transition:border-color .2s, background .2s}
+.prob.ok{border-color:var(--green-l);background:#effaf2}
+.prob.bad{border-color:var(--red);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+.pnum{display:inline-block;background:var(--red);color:#fff;font-weight:800;border-radius:999px;padding:2px 12px;margin-bottom:8px;font-size:.85rem}
+.pnum.g{background:var(--green)}
+.ptext{font-size:1.05rem;line-height:1.6;margin:4px 0 12px}
+.ptext b{color:var(--red-d)}
+.answer{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.answer input{width:170px}
+.unit{font-weight:700;color:var(--green-d)}
+.fb{margin-top:10px;font-weight:600;min-height:1.4em}
+.fb.good{color:var(--green)}
+.fb.err{color:var(--red)}
+.hint{margin-top:6px;font-size:.92rem;background:#fff6dc;border-left:5px solid var(--gold);padding:8px 12px;border-radius:8px;color:#4a3500}
+.sol{margin-top:8px;font-size:.92rem;background:#eef4ef;border-left:5px solid var(--green);padding:8px 12px;border-radius:8px}
+.progress{height:12px;background:#dbe6de;border-radius:999px;overflow:hidden;margin:10px 0 2px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold),var(--green-l));transition:width .4s}
+.note{font-size:.88rem;color:#4b5f54}
+.tag{display:inline-block;background:var(--gold);color:#4a3500;font-weight:800;border-radius:999px;padding:3px 12px;font-size:.78rem;margin-left:6px;vertical-align:middle}
+.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:rgba(5,25,15,.78);display:flex;align-items:center;justify-content:center;z-index:10;padding:18px}
+.modal{background:var(--snow);color:var(--ink);border-radius:24px;padding:26px 22px;text-align:center;max-width:420px;width:100%;
+  border:4px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.5);animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.modal h2{color:var(--red-d);margin:8px 0 4px}
+.modal svg{width:150px;height:150px}
+.sumwrap{text-align:center}
+.sumwrap canvas{width:100%;max-width:560px;height:auto;border-radius:16px;border:3px solid var(--gold);box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.angsvg{display:block;margin:4px 0 8px;max-width:260px;width:100%;height:auto;background:#f7fbf8;border:1.5px solid #dbe6de;border-radius:12px}
+footer{text-align:center;opacity:.8;font-size:.82rem;margin-top:20px}
+@media (max-width:560px){.step span.t{display:none}.answer input{width:140px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="tree">🎄</span><span>Christmas Motion Challenge</span></div>
+    <button class="iconbtn" id="muteBtn" type="button" aria-pressed="false">🔊 Sound: On</button>
+  </header>
+
+  <!-- START -->
+  <section id="screenStart">
+    <div class="card hero">
+      <h1>🎁 Distance, Velocity &amp; Acceleration</h1>
+      <p>Solve each problem, earn a badge for every part you finish, and aim for the <b>Master</b> badge!</p>
+      <p style="font-size:.9rem">Round your answers to <b>two decimal places</b>.</p>
+    </div>
+    <div class="card">
+      <h2>Before you begin</h2>
+      <label class="lbl" for="nameInput">Write your name</label>
+      <div class="row">
+        <input type="text" id="nameInput" maxlength="40" placeholder="Type your full name here" autocomplete="name" style="flex:1;min-width:220px">
+        <button class="btn red big" id="startBtn" type="button">Start Activity ▶</button>
+      </div>
+      <div class="fb err" id="nameErr" role="alert"></div>
+      <div class="formulas" style="margin-top:16px">
+        <div><b>Part 1</b> – Distance &amp; velocity (5 pts)</div>
+        <div><b>Part 2</b> – Acceleration (5 pts)</div>
+      </div>
+      <p class="note">Score 8 out of 10 or higher to get <b>PASSED</b>. Use keyboard, mouse, pen or touch — press <b>Enter</b> to check an answer.</p>
+    </div>
+  </section>
+
+  <!-- PART -->
+  <section id="screenPart" class="hidden">
+    <div class="stepper" id="stepper"></div>
+    <div class="card">
+      <h2 id="partTitle"></h2>
+      <div class="note" id="partSub"></div>
+      <div class="formulas" id="partFormulas"></div>
+      <div class="progress"><i id="bar"></i></div>
+      <div class="note" id="barTxt"></div>
+      <div id="probList"></div>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section id="screenSummary" class="hidden">
+    <div class="card sumwrap">
+      <h2>🎅 Your Summary</h2>
+      <canvas id="sumCanvas" width="1080" height="1500"></canvas>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="btn gold big" id="dlBtn" type="button">Click Here to Download the Summary</button>
+        <button class="btn ghost" id="againBtn" type="button">↻ Try Again with New Problems</button>
+      </div>
+      <p class="note">The downloaded PNG is ready for uploading.</p>
+    </div>
+  </section>
+
+  <footer>Merry Christmas &amp; happy solving! ✨</footer>
+</div>
+
+<div class="overlay hidden" id="overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============ CONFIG ============ */
+const POINTS = [5, 5];             // points per part
+const PART_NAMES = ['Distance & Velocity','Acceleration'];
+const PASS_MARK = 8;
+
+/* ============ HELPERS ============ */
+const $ = id => document.getElementById(id);
+const ri = (a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const r2 = x => Math.round((x+Number.EPSILON)*100)/100;
+const fmt = x => { const v=r2(x); return Object.is(v,-0)?'0':String(v); };
+const rad = d => d*Math.PI/180;
+const vi_ = 'v<sub>i</sub>', vf_ = 'v<sub>f</sub>';
+const things = ["Santa's sleigh","A toy train","A reindeer","A snowmobile","A sledge","A delivery van","A gift-carrying drone","A ski patrol cart"];
+
+/* ============ SOUND ============ */
+let actx=null, muted=false;
+function ctx(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx&&actx.state==='suspended') actx.resume(); return actx; }
+function tone(f,start,dur,type='sine',vol=.18){
+  const c=ctx(); if(!c||muted) return;
+  const o=c.createOscillator(), g=c.createGain();
+  o.type=type; o.frequency.value=f;
+  const t=c.currentTime+start;
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+.05);
+}
+const sfx = {
+  click(){ tone(660,0,.06,'triangle',.1); },
+  good(){ tone(784,0,.12); tone(1047,.1,.22); },
+  bad(){ tone(180,0,.25,'sawtooth',.12); tone(140,.12,.3,'sawtooth',.1); },
+  badge(){ [523,659,784,1047].forEach((f,i)=>tone(f,i*.13,.35,'triangle',.2)); },
+  master(){ [523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,i*.12,.4,'triangle',.22)); tone(262,0,1,'sine',.12); },
+  bell(){ tone(1319,0,.6,'sine',.12); tone(1976,0,.5,'sine',.06); }
+};
+$('muteBtn').addEventListener('click',()=>{
+  muted=!muted; $('muteBtn').textContent=muted?'🔇 Sound: Off':'🔊 Sound: On'; $('muteBtn').setAttribute('aria-pressed',muted);
+  if(!muted) sfx.click();
+});
+document.addEventListener('pointerdown',e=>{ if(e.target.closest('button')) { ctx(); if(!muted) sfx.click(); } },true);
+
+/* ============ SNOW ============ */
+(function(){
+  const cv=$('snow'), c=cv.getContext('2d'); let W,H,fl=[];
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function size(){ W=cv.width=innerWidth; H=cv.height=innerHeight; fl=Array.from({length:Math.min(90,Math.floor(W/14))},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.6+.8,s:Math.random()*.8+.3,d:Math.random()*Math.PI*2})); }
+  addEventListener('resize',size); size();
+  (function tick(){
+    c.clearRect(0,0,W,H); c.fillStyle='rgba(255,255,255,.8)';
+    fl.forEach(f=>{ f.y+=f.s; f.d+=.01; f.x+=Math.sin(f.d)*.4; if(f.y>H){f.y=-5;f.x=Math.random()*W;} c.beginPath(); c.arc(f.x,f.y,f.r,0,7); c.fill(); });
+    requestAnimationFrame(tick);
+  })();
+})();
+
+/* ============ BADGES ============ */
+function badgeSVG(label,kind){
+  const cols = kind==='master' ? ['#ffe27a','#c99a14','#8f0b21'] : kind==='p1' ? ['#ff6b81','#c8102e','#8f0b21'] : kind==='p2' ? ['#5fd68e','#146b3a','#0a3d2a'] : ['#ffd966','#d4a017','#146b3a'];
+  const id='g'+Math.random().toString(36).slice(2,7);
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label}">
+  <defs><radialGradient id="${id}" cx="35%" cy="30%"><stop offset="0" stop-color="${cols[0]}"/><stop offset="1" stop-color="${cols[1]}"/></radialGradient></defs>
+  <path d="M38 78 L26 116 L45 106 L56 118 L62 84Z" fill="${cols[2]}"/><path d="M82 78 L94 116 L75 106 L64 118 L58 84Z" fill="#b00c28"/>
+  <circle cx="60" cy="52" r="46" fill="url(#${id})" stroke="#fff4c2" stroke-width="4"/>
+  <circle cx="60" cy="52" r="37" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-dasharray="3 4"/>
+  <polygon points="60,24 67,43 87,44 71,57 77,76 60,65 43,76 49,57 33,44 53,43" fill="#fffaf0" stroke="${cols[2]}" stroke-width="1.5"/>
+  <text x="60" y="58" text-anchor="middle" font-family="Poppins,Segoe UI,Arial" font-weight="800" font-size="${kind==='master'?9:13}" fill="${cols[2]}">${kind==='master'?'MASTER':label}</text>
+  </svg>`;
+}
+const partKind = i => ['p1','p2','p3'][i];
+const partBadgeLabel = i => 'P'+(i+1);
+
+/* ============ PROBLEM GENERATORS ============ */
+function genPart1(){
+  const L=[];
+  { const s=pick(things),vi=ri(0,12),a=ri(2,6),t=ri(3,8),vf=vi+a*t,d=(vf*vf-vi*vi)/(2*a);
+    L.push({q:`${s} speeds up from <b>${vi} m/s</b> to <b>${vf} m/s</b> with a constant acceleration of <b>${a} m/s²</b>. How far does it travel?`,
+      unit:'m',ans:d,hint:`Use d = (${vf_}² − ${vi_}²) / 2a`,
+      sol:`d = (${vf}² − ${vi}²) / (2 × ${a}) = ${fmt(d)} m`}); }
+  { const s=pick(things),vi=ri(0,12),a=ri(1,5),t=ri(3,10),d=vi*t+.5*a*t*t;
+    L.push({q:`${s} starts at <b>${vi} m/s</b> and accelerates at <b>${a} m/s²</b> for <b>${t} s</b>. What distance does it cover?`,
+      unit:'m',ans:d,hint:`Use d = ${vi_}·t + ½·a·t²`,
+      sol:`d = (${vi})(${t}) + 0.5(${a})(${t})² = ${fmt(d)} m`}); }
+  { const s=pick(things),vi=ri(1,10),a=ri(2,5),t=ri(3,9),vf=vi+a*t;
+    L.push({q:`${s} has an initial velocity of <b>${vi} m/s</b> and accelerates at <b>${a} m/s²</b> for <b>${t} s</b>. What is its final velocity?`,
+      unit:'m/s',ans:vf,hint:`Rearrange a = (${vf_} − ${vi_}) / t  →  ${vf_} = ${vi_} + a·t`,
+      sol:`v<sub>f</sub> = ${vi} + (${a})(${t}) = ${fmt(vf)} m/s`}); }
+  { const s=pick(things),vi=ri(0,10),a=ri(2,5),t=ri(3,9),vf=vi+a*t;
+    L.push({q:`${s} speeds up from <b>${vi} m/s</b> to <b>${vf} m/s</b> at a constant <b>${a} m/s²</b>. How long does this take?`,
+      unit:'s',ans:t,hint:`Rearrange a = (${vf_} − ${vi_}) / t  →  t = (${vf_} − ${vi_}) / a`,
+      sol:`t = (${vf} − ${vi}) / ${a} = ${fmt(t)} s`}); }
+  { const s=pick(things),vi=ri(2,10),a=ri(1,4),t=ri(2,8),vf=vi+a*t,d=vi*t+.5*a*t*t;
+    L.push({q:`${s} changes its velocity from <b>${vi} m/s</b> to <b>${vf} m/s</b> in <b>${t} s</b>. How far does it travel? <span class="note">(Find a first.)</span>`,
+      unit:'m',ans:d,hint:`Step 1: a = (${vf_} − ${vi_}) / t.  Step 2: d = ${vi_}·t + ½·a·t²`,
+      sol:`a = (${vf} − ${vi}) / ${t} = ${fmt(a)} m/s²; d = (${vi})(${t}) + 0.5(${fmt(a)})(${t})² = ${fmt(d)} m`}); }
+  return L;
+}
+function genPart2(){
+  const L=[];
+  { const s=pick(things),vi=ri(0,10),vf=vi+ri(6,40),t=ri(2,8),a=(vf-vi)/t;
+    L.push({q:`${s} goes from <b>${vi} m/s</b> to <b>${vf} m/s</b> in <b>${t} s</b>. What is its acceleration?`,
+      unit:'m/s²',ans:a,hint:`Use a = (${vf_} − ${vi_}) / t`,
+      sol:`a = (${vf} − ${vi}) / ${t} = ${fmt(a)} m/s²`}); }
+  { const s=pick(things),vi=ri(0,10),vf=ri(12,30),d=ri(20,100),a=(vf*vf-vi*vi)/(2*d);
+    L.push({q:`${s} speeds up from <b>${vi} m/s</b> to <b>${vf} m/s</b> over a distance of <b>${d} m</b>. Find its acceleration.`,
+      unit:'m/s²',ans:a,hint:`Rearrange d = (${vf_}² − ${vi_}²) / 2a  →  a = (${vf_}² − ${vi_}²) / 2d`,
+      sol:`a = (${vf}² − ${vi}²) / (2 × ${d}) = ${fmt(a)} m/s²`}); }
+  { const s=pick(things),vi=ri(0,8),a=ri(1,4),t=ri(4,10),d=vi*t+.5*a*t*t;
+    L.push({q:`Starting at <b>${vi} m/s</b>, ${s.toLowerCase()} travels <b>${fmt(d)} m</b> in <b>${t} s</b> with constant acceleration. What is the acceleration?`,
+      unit:'m/s²',ans:a,hint:`Rearrange d = ${vi_}·t + ½·a·t²  →  a = 2(d − ${vi_}·t) / t²`,
+      sol:`a = 2(${fmt(d)} − ${vi}×${t}) / ${t}² = ${fmt(a)} m/s²`}); }
+  { const s=pick(things),vi=ri(15,30),t=ri(3,8),a=-vi/t;
+    L.push({q:`${s} moving at <b>${vi} m/s</b> brakes to a complete stop in <b>${t} s</b>. What is its acceleration? <span class="note">(Use a negative sign for slowing down.)</span>`,
+      unit:'m/s²',ans:a,hint:`Final velocity is 0. Use a = (${vf_} − ${vi_}) / t`,
+      sol:`a = (0 − ${vi}) / ${t} = ${fmt(a)} m/s²`}); }
+  { const s=pick(things),vi=ri(10,25),d=ri(10,60),a=-(vi*vi)/(2*d);
+    L.push({q:`${s} travelling at <b>${vi} m/s</b> stops after covering <b>${d} m</b>. Find its acceleration. <span class="note">(Negative for slowing down.)</span>`,
+      unit:'m/s²',ans:a,hint:`Final velocity is 0. a = (${vf_}² − ${vi_}²) / 2d`,
+      sol:`a = (0² − ${vi}²) / (2 × ${d}) = ${fmt(a)} m/s²`}); }
+  return L;
+}
+/* ============ STATE ============ */
+let student='', part=0, parts=[];
+function newGame(){
+  parts=[genPart1(),genPart2()].map(list=>list.map(p=>({...p,attempts:0,solved:false,firstTry:false,revealed:false,errors:0})));
+  part=0;
+}
+const FORMULAS = [
+ `<div><b>a</b> = (v<sub>f</sub> − v<sub>i</sub>) / t</div><div><b>d</b> = (v<sub>f</sub>² − v<sub>i</sub>²) / 2a</div><div><b>d</b> = v<sub>i</sub> × t + ½ × a × t²</div>`,
+ `<div><b>a</b> = (v<sub>f</sub> − v<sub>i</sub>) / t</div><div><b>d</b> = (v<sub>f</sub>² − v<sub>i</sub>²) / 2a</div><div><b>d</b> = v<sub>i</sub> × t + ½ × a × t²</div>`
+];
+const SUBS = [
+ 'Calculate the horizontal distance and velocity. Round answers to 2 decimal places.',
+ 'Calculate the horizontal acceleration. Round answers to 2 decimal places.'
+];
+function partScore(i){ const n=parts[i].length; return parts[i].filter(p=>p.firstTry).length*POINTS[i]/n; }
+function totalScore(){ return r2(partScore(0)+partScore(1)); }
+function totalMax(){ return POINTS.reduce((a,b)=>a+b,0); }
+function totalErrors(){ return parts.flat().reduce((a,p)=>a+p.errors,0); }
+const partDone = i => parts[i].every(p=>p.solved);
+
+/* ============ UI ============ */
+function show(id){ ['screenStart','screenPart','screenSummary'].forEach(s=>$(s).classList.toggle('hidden',s!==id)); scrollTo({top:0,behavior:'smooth'}); }
+
+function renderStepper(){
+  $('stepper').innerHTML=[0,1].map(i=>{
+    const done=partDone(i), cls=done?'done':(i===part?'active':'');
+    return `<div class="step ${cls}">${done?badgeSVG(partBadgeLabel(i),partKind(i)):'<svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="12" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-dasharray="3 3"/></svg>'}<span class="t">Part ${i+1}</span></div>`;
+  }).join('');
+}
+function renderPart(){
+  const i=part;
+  $('partTitle').innerHTML=`Part ${i+1}: ${PART_NAMES[i]} ${POINTS[i]===0?'<span class="tag">Badge part</span>':`<span class="tag">${POINTS[i]} pts</span>`}`;
+  $('partSub').textContent=SUBS[i];
+  $('partFormulas').innerHTML=FORMULAS[i];
+  renderStepper(); updateBar();
+  const list=$('probList'); list.innerHTML='';
+  parts[i].forEach((p,k)=>{
+    const div=document.createElement('div'); div.className='prob'+(p.solved?' ok':''); div.id='prob'+k;
+    div.innerHTML=`<span class="pnum ${i===1?'g':''}">Problem ${k+1}</span>
+      <div class="ptext">${p.q}</div>${p.svg||''}
+      <div class="answer">
+        <input type="text" inputmode="decimal" autocomplete="off" id="in${k}" placeholder="Your answer" aria-label="Answer for problem ${k+1}">
+        <span class="unit">${p.unit}</span>
+        <button class="btn" type="button" id="chk${k}">Check</button>
+        <button class="btn ghost hidden" type="button" id="rev${k}">Show answer</button>
+      </div>
+      <div class="fb" id="fb${k}" aria-live="polite"></div>
+      <div id="extra${k}"></div>`;
+    list.appendChild(div);
+    const inp=$('in'+k);
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); check(k);} });
+    $('chk'+k).addEventListener('click',()=>check(k));
+    $('rev'+k).addEventListener('click',()=>reveal(k));
+    if(p.solved) lockProblem(k);
+  });
+}
+function lockProblem(k){
+  const p=parts[part][k], inp=$('in'+k);
+  inp.value=fmt(p.ans); inp.disabled=true; $('chk'+k).disabled=true; $('rev'+k).classList.add('hidden');
+  $('prob'+k).classList.add('ok');
+  $('fb'+k).className='fb good';
+  $('fb'+k).textContent = p.revealed ? '👀 Answer revealed — no point for this one.' : (p.firstTry?'✅ Correct! +point':'✅ Correct (after a retry — no point for this one).');
+  $('extra'+k).innerHTML=`<div class="sol"><b>Solution:</b> ${p.sol}</div>`;
+}
+function updateBar(){
+  const n=parts[part].length, d=parts[part].filter(p=>p.solved).length;
+  $('bar').style.width=(d/n*100)+'%'; $('barTxt').textContent=`${d} of ${n} problems solved`;
+}
+function parseNum(s){
+  s=s.trim().replace(/\u2212/g,'-').replace(',','.').replace(/\s+/g,'');
+  if(!/^[-+]?(\d+\.?\d*|\.\d+)$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+function check(k){
+  const p=parts[part][k]; if(p.solved) return;
+  const inp=$('in'+k), fb=$('fb'+k), box=$('prob'+k);
+  const v=parseNum(inp.value);
+  if(isNaN(v)){ fb.className='fb err'; fb.textContent='Please type a number (for example 12.5 or -3.2).'; inp.focus(); return; }
+  p.attempts++;
+  if(Math.abs(v-r2(p.ans))<=0.0105){
+    p.solved=true; p.firstTry=(p.attempts===1);
+    if(p.attempts>1) p.errors=p.attempts-1; else p.errors=0;
+    sfx.good(); lockProblem(k); updateBar(); renderStepper();
+    if(partDone(part)) setTimeout(partComplete,650);
+  } else {
+    p.errors=p.attempts;
+    sfx.bad(); box.classList.remove('bad'); void box.offsetWidth; box.classList.add('bad');
+    fb.className='fb err'; fb.textContent='❌ Not quite. Check your work and try again.';
+    $('extra'+k).innerHTML=`<div class="hint">💡 ${p.hint}</div>`;
+    if(p.attempts>=3) $('rev'+k).classList.remove('hidden');
+    inp.select();
+  }
+}
+function reveal(k){
+  const p=parts[part][k]; if(p.solved) return;
+  p.solved=true; p.revealed=true; p.firstTry=false; p.errors=Math.max(p.attempts,1);
+  lockProblem(k); updateBar(); renderStepper();
+  if(partDone(part)) setTimeout(partComplete,650);
+}
+
+function openModal(html){ $('modal').innerHTML=html; $('overlay').classList.remove('hidden'); const b=$('modal').querySelector('button'); if(b) b.focus(); }
+function closeModal(){ $('overlay').classList.add('hidden'); }
+
+function partComplete(){
+  const i=part, last=(i===1);
+  sfx.badge();
+  const pts=POINTS[i]>0?`<p>You scored <b>${r2(partScore(i))} / ${POINTS[i]}</b> in this part.</p>`:`<p>Great work finishing this part!</p>`;
+  openModal(`${badgeSVG(partBadgeLabel(i),partKind(i))}<h2>Part ${i+1} Badge Earned! 🎉</h2>${pts}
+    <button class="btn red big" type="button" id="nextBtn">${last?'See My Summary ▶':'Next Part ▶'}</button>`);
+  $('nextBtn').addEventListener('click',()=>{ closeModal(); if(last) finish(); else { part++; renderPart(); scrollTo({top:0,behavior:'smooth'}); const f=$('in0'); if(f) f.focus(); }});
+}
+
+/* ============ SUMMARY ============ */
+function isMaster(){ return [0,1].every(partDone) && totalErrors()===0; }
+function isPassed(){ return totalScore()>=PASS_MARK; }
+
+async function finish(){
+  show('screenSummary');
+  try{ await document.fonts.load('700 40px Poppins'); await document.fonts.load('800 40px Poppins'); }catch(e){}
+  drawSummary();
+  if(isMaster()){ sfx.master(); setTimeout(()=>openModal(`${badgeSVG('MASTER','master')}<h2>🏆 MASTER Badge!</h2><p>Perfect run — no errors at all!</p><button class="btn gold big" type="button" id="mOk">Awesome!</button>`),500); setTimeout(()=>{ const b=$('mOk'); if(b) b.addEventListener('click',closeModal); },600); }
+  else sfx.bell();
+}
+
+function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+function star(c,cx,cy,R,r,fill,stroke){
+  c.beginPath(); for(let i=0;i<10;i++){ const a=-Math.PI/2+i*Math.PI/5, rr_=i%2?r:R; c.lineTo(cx+rr_*Math.cos(a),cy+rr_*Math.sin(a)); } c.closePath();
+  c.fillStyle=fill; c.fill(); if(stroke){ c.strokeStyle=stroke; c.lineWidth=3; c.stroke(); }
+}
+function medal(c,cx,cy,R,cols,label,fontSize){
+  c.fillStyle=cols[2]; c.beginPath(); c.moveTo(cx-R*.55,cy+R*.6); c.lineTo(cx-R*.9,cy+R*1.55); c.lineTo(cx-R*.35,cy+R*1.25); c.lineTo(cx-R*.05,cy+R*1.6); c.lineTo(cx+R*.05,cy+R*.7); c.fill();
+  c.fillStyle='#b00c28'; c.beginPath(); c.moveTo(cx+R*.55,cy+R*.6); c.lineTo(cx+R*.9,cy+R*1.55); c.lineTo(cx+R*.35,cy+R*1.25); c.lineTo(cx+R*.05,cy+R*1.6); c.lineTo(cx-R*.05,cy+R*.7); c.fill();
+  const g=c.createRadialGradient(cx-R*.3,cy-R*.35,R*.1,cx,cy,R); g.addColorStop(0,cols[0]); g.addColorStop(1,cols[1]);
+  c.beginPath(); c.arc(cx,cy,R,0,7); c.fillStyle=g; c.fill(); c.lineWidth=R*.07; c.strokeStyle='#fff4c2'; c.stroke();
+  star(c,cx,cy-R*.1,R*.62,R*.3,'#fffaf0',cols[2]);
+  c.fillStyle=cols[2]; c.font=`800 ${fontSize}px Poppins,Segoe UI,Arial`; c.textAlign='center'; c.textBaseline='middle'; c.fillText(label,cx,cy+R*.12);
+}
+const BCOL={p1:['#ff6b81','#c8102e','#8f0b21'],p2:['#5fd68e','#146b3a','#0a3d2a'],p3:['#ffd966','#d4a017','#146b3a'],master:['#ffe27a','#c99a14','#8f0b21']};
+
+function drawSummary(){
+  const cv=$('sumCanvas'), c=cv.getContext('2d'), W=cv.width, H=cv.height;
+  const FONT='Poppins,Segoe UI,Helvetica Neue,Arial,sans-serif';
+  // background
+  let g=c.createLinearGradient(0,0,W,H); g.addColorStop(0,'#0a3d2a'); g.addColorStop(1,'#06261a'); c.fillStyle=g; c.fillRect(0,0,W,H);
+  // snow dots
+  c.fillStyle='rgba(255,255,255,.55)'; let seed=7; const rnd=()=>{ seed=(seed*9301+49297)%233280; return seed/233280; };
+  for(let i=0;i<90;i++){ c.beginPath(); c.arc(rnd()*W,rnd()*H,rnd()*3+1,0,7); c.fill(); }
+  // gold frame
+  c.lineWidth=10; c.strokeStyle='#f4c542'; rr(c,24,24,W-48,H-48,36); c.stroke();
+  c.lineWidth=3; c.strokeStyle='#c8102e'; rr(c,44,44,W-88,H-88,28); c.stroke();
+  // title banner
+  g=c.createLinearGradient(0,70,0,250); g.addColorStop(0,'#e2243f'); g.addColorStop(1,'#8f0b21'); c.fillStyle=g; rr(c,90,80,W-180,170,26); c.fill();
+  c.fillStyle='#fffaf0'; c.textAlign='center'; c.textBaseline='alphabetic';
+  c.font=`800 54px ${FONT}`; c.fillText('Christmas Motion Challenge',W/2,152);
+  c.font=`600 30px ${FONT}`; c.fillText('Distance • Velocity • Acceleration',W/2,204);
+  // name
+  c.fillStyle='#f4c542'; c.font=`600 28px ${FONT}`; c.fillText('STUDENT',W/2,318);
+  let size=64; c.font=`800 ${size}px ${FONT}`; while(c.measureText(student).width>W-220 && size>26){ size-=2; c.font=`800 ${size}px ${FONT}`; }
+  c.fillStyle='#fffaf0'; c.fillText(student,W/2,318+size+6);
+  c.font=`500 26px ${FONT}`; c.fillStyle='rgba(255,250,240,.8)';
+  c.fillText(new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'}),W/2,318+size+52);
+  // score card
+  const cy=470; c.fillStyle='rgba(255,250,240,.96)'; rr(c,110,cy,W-220,250,30); c.fill();
+  c.fillStyle='#8f0b21'; c.font=`700 30px ${FONT}`; c.fillText('TOTAL SCORE',W/2,cy+58);
+  c.fillStyle='#146b3a'; c.font=`800 120px ${FONT}`; c.fillText(`${totalScore()} / ${totalMax()}`,W/2,cy+175);
+  c.fillStyle='#4b5f54'; c.font=`500 24px ${FONT}`; c.fillText(`Total errors: ${totalErrors()}`,W/2,cy+222);
+  // parts rows
+  let y=770;
+  for(let i=0;i<2;i++){
+    c.fillStyle='rgba(255,250,240,.12)'; rr(c,110,y,W-220,118,24); c.fill();
+    const done=partDone(i);
+    if(done) medal(c,200,y+52,40,BCOL[partKind(i)],partBadgeLabel(i),22);
+    else { c.strokeStyle='rgba(255,255,255,.5)'; c.setLineDash([8,8]); c.lineWidth=3; c.beginPath(); c.arc(200,y+52,40,0,7); c.stroke(); c.setLineDash([]); }
+    c.textAlign='left'; c.fillStyle='#fffaf0'; c.font=`700 34px ${FONT}`; c.fillText(`Part ${i+1}: ${PART_NAMES[i]}`,275,y+50);
+    c.font=`500 25px ${FONT}`; c.fillStyle='#f4c542';
+    const n=parts[i].length, ok=parts[i].filter(p=>p.firstTry).length;
+    c.fillText(POINTS[i]>0?`Score: ${r2(partScore(i))} / ${POINTS[i]}   •   ${done?'Completed ✓':'Not completed'}`:`${ok} / ${n} correct on first try   •   ${done?'Completed ✓':'Not completed'}`,275,y+92);
+    y+=136;
+  }
+  // result stamp
+  const passed=isPassed(), master=isMaster();
+  c.textAlign='center';
+  const sy=1210;
+  c.save(); c.translate(W/2,sy); c.rotate(-.04);
+  c.lineWidth=10; c.strokeStyle=passed?'#7be0a5':'#ff8a9a'; c.fillStyle=passed?'rgba(20,107,58,.85)':'rgba(143,11,33,.85)';
+  rr(c,-290,-80,580,160,28); c.fill(); c.stroke();
+  c.fillStyle='#fffaf0'; c.font=`800 92px ${FONT}`; c.textBaseline='middle'; c.fillText(passed?'PASSED':'NOT PASSED',0,-8);
+  c.font=`500 24px ${FONT}`; c.fillText(`Passing score: ${PASS_MARK} / ${totalMax()}`,0,54);
+  c.restore();
+  // master
+  if(master){ medal(c,W/2-210,1380,56,BCOL.master,'MASTER',17); c.textAlign='left'; c.textBaseline='alphabetic'; c.fillStyle='#ffe27a'; c.font=`800 48px ${FONT}`; c.fillText('MASTER BADGE',W/2-130,1378); c.font=`500 24px ${FONT}`; c.fillStyle='#fffaf0'; c.fillText('Completed with no errors!',W/2-130,1416); }
+  else { c.textAlign='center'; c.fillStyle='rgba(255,250,240,.75)'; c.font=`500 26px ${FONT}`; c.fillText('Master badge: finish every part with no errors',W/2,1392); }
+  c.textAlign='center'; c.fillStyle='rgba(255,250,240,.6)'; c.font=`500 22px ${FONT}`; c.fillText('🎄 Merry Christmas! 🎄',W/2,1462);
+}
+
+function download(){
+  const cv=$('sumCanvas');
+  const safe=(student||'student').replace(/[^\w\-]+/g,'_').slice(0,40);
+  const name=`Summary_${safe}.png`;
+  cv.toBlob(b=>{
+    if(!b){ const a=document.createElement('a'); a.href=cv.toDataURL('image/png'); a.download=name; document.body.appendChild(a); a.click(); a.remove(); return; }
+    const url=URL.createObjectURL(b), a=document.createElement('a');
+    a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+  },'image/png');
+  sfx.bell();
+}
+
+/* ============ EVENTS ============ */
+function start(){
+  const n=$('nameInput').value.trim();
+  if(!n){ $('nameErr').textContent='Please write your name first.'; $('nameInput').focus(); sfx.bad(); return; }
+  $('nameErr').textContent=''; student=n; newGame(); show('screenPart'); renderPart(); sfx.good(); const f=$('in0'); if(f) f.focus();
+}
+$('startBtn').addEventListener('click',start);
+$('nameInput').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); start(); } });
+$('dlBtn').addEventListener('click',download);
+$('againBtn').addEventListener('click',()=>{ closeModal(); newGame(); show('screenPart'); renderPart(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('overlay').classList.contains('hidden') && $('modal').querySelector('#mOk')) closeModal(); });
+</script>
+</body>
+</html>
